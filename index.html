@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CropYield — Crop Yield Predictor | AI/ML Project</title>
+<meta name="description" content="CropYield predicts crop yield in quintals per hectare from rainfall, temperature, fertilizer use, soil pH and irrigation, using a ridge regression model trained on 600 synthetic farm seasons.">
+<link rel="canonical" href="https://cropyield.vercel.app/">
+<meta property="og:title" content="CropYield — Crop Yield Predictor">
+<meta property="og:description" content="Enter your farm season details and instantly estimate crop yield, with a real trained ML model running in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cropyield.vercel.app/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CropYield — Crop Yield Predictor">
+<meta name="twitter:description" content="Ridge regression crop-yield predictor. Try the live demo in your browser.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CropYield","applicationCategory":"BusinessApplication","description":"Crop yield predictor using ridge regression.","url":"https://cropyield.vercel.app/"}</script>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff;max-width:720px;margin:0 auto;padding:24px;line-height:1.5}
+h1{font-size:2em} label{display:block;margin:12px 0 4px;font-weight:bold}
+input,select{width:100%;padding:10px;font-size:16px;border:1px solid #000;border-radius:4px;box-sizing:border-box}
+button{margin-top:20px;padding:12px 24px;font-size:17px;background:#000;color:#fff;border:none;border-radius:4px;cursor:pointer}
+#result{margin-top:24px;padding:20px;border:2px solid #000;border-radius:8px;display:none}
+#result b{font-size:2em}
+.note{color:#333;font-size:.95em} code{background:#f2f2f2;padding:2px 5px}
+</style>
+</head>
+<body>
+<h1>&#127806; CropYield — Crop Yield Predictor</h1>
+<p class="note">A 2nd-year B.Tech AI/ML project by Vikranth Reddy. A ridge regression model trained on 600 synthetic farm seasons predicts crop yield in quintals per hectare. 5-fold CV: <b>R&sup2; = 0.844</b>, MAE = 2.50 q/ha vs a 6.45 q/ha mean-guess baseline.</p>
+<label>Season rainfall (mm)</label><input id="rainfall" type="number" value="800" min="100" max="2000">
+<label>Average temperature (&deg;C)</label><input id="temp" type="number" value="26" min="10" max="40">
+<label>Fertilizer used (kg per hectare)</label><input id="fertilizer" type="number" value="150" min="0" max="400">
+<label>Soil pH</label><input id="ph" type="number" value="6.5" min="4" max="9" step="0.1">
+<label>Irrigation</label>
+<select id="irrigation">
+<option value="0">Rain-fed (no irrigation)</option>
+<option value="1" selected>Irrigated</option>
+</select>
+<button onclick="predict()">Estimate crop yield</button>
+<div id="result"></div>
+<p class="note">How it works: each input is standardised with the training means and standard deviations, then multiplied by the model's learned coefficients. The exact same weights run in this page and in the Python training script (<code>train.py</code>), so the browser result matches the trained model to within 0.01 q/ha.</p>
+<p class="note">Model: Ridge regression (&alpha; = 1.0) on standardised features — rainfall, average temperature, fertilizer, soil pH, irrigation. Try a sample: 1000 mm rain, 24&deg;C, 250 kg/ha fertilizer, pH 6.8, irrigated &rarr; about 48.3 q/ha.</p>
+<p><a href="https://github.com/HVRGAMING2705/cropyield">View source on GitHub</a></p>
+<script>
+const MEANS = [746.3878965289929, 25.058969713669637, 152.12554830077065, 6.452969250326594, 0.5283333333333333];
+const STDS = [258.2885453142178, 4.127780836396938, 86.9867599074777, 0.8760370498820444, 0.4991965767332771];
+const COEF = [5.084846158454687, 0.9999529128792278, 4.401250214242229, -0.02219757394343567, 2.9214493633028367];
+const INTERCEPT = 35.83223999463323;
+function predict(){
+  const v = [parseFloat(document.getElementById("rainfall").value), parseFloat(document.getElementById("temp").value), parseFloat(document.getElementById("fertilizer").value), parseFloat(document.getElementById("ph").value), parseFloat(document.getElementById("irrigation").value)];
+  let y = INTERCEPT;
+  for (let j = 0; j < 5; j++) y += ((v[j]-MEANS[j])/STDS[j]) * COEF[j];
+  y = Math.max(5, Math.min(60, y));
+  const el = document.getElementById("result");
+  el.style.display = "block";
+  el.innerHTML = "<b>" + y.toFixed(1) + " q/ha</b><br>Estimated crop yield for this season.<br><span class='note'>For a 2-hectare field that is roughly " + (y*2).toFixed(0) + " quintals in total.</span>";
+}
+</script>
+</body>
+</html>
