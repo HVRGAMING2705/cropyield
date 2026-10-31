@@ -1,1 +1,20 @@
-IyBDcm9wWWllbGQg4oCUIENyb3AgWWllbGQgUHJlZGljdG9yCgpBIDJuZC15ZWFyIEIuVGVjaCBBSS9NTCBwcm9qZWN0IGJ5IFZpa3JhbnRoIFJlZGR5IChXb3hzZW4gVW5pdmVyc2l0eSkuCgojIyBXaGF0IGl0IGRvZXMKUHJlZGljdHMgY3JvcCB5aWVsZCBpbiBxdWludGFscyBwZXIgaGVjdGFyZSBmcm9tIHNlYXNvbiByYWluZmFsbCwgYXZlcmFnZSB0ZW1wZXJhdHVyZSwgZmVydGlsaXplciB1c2UsIHNvaWwgcEggYW5kIGlycmlnYXRpb24uCgojIyBNb2RlbAotIFJpZGdlIHJlZ3Jlc3Npb24gKGFscGhhID0gMS4wKSBvbiBzdGFuZGFyZGlzZWQgZmVhdHVyZXMKLSBUcmFpbmVkIG9uIDYwMCBzeW50aGV0aWMgZmFybSBzZWFzb25zIChzZWVkIDQyKQotIDUtZm9sZCBjcm9zcy12YWxpZGF0aW9uOiBSwrIgPSAwLjg0NCwgTUFFID0gMi41MCBxL2hhLCBSTVNFID0gMy4xMyBxL2hhCi0gQmFzZWxpbmUgKHByZWRpY3QgdGhlIG1lYW4pOiBNQUUgPSA2LjQ1IHEvaGEg4oCUIHRoZSBtb2RlbCBpcyB+Mi42eCBiZXR0ZXIKCiMjIEZpbGVzCi0gYHRyYWluLnB5YCDigJQgZ2VuZXJhdGVzIGRhdGEsIHRyYWlucyB0aGUgbW9kZWwsIHdyaXRlcyBgbW9kZWwuanNvbmAKLSBgbW9kZWwuanNvbmAg4oCUIGxlYXJuZWQgbWVhbnMsIHN0YW5kYXJkIGRldmlhdGlvbnMsIGNvZWZmaWNpZW50cywgaW50ZXJjZXB0Ci0gYGluZGV4Lmh0bWxgIOKAlCBpbnRlcmFjdGl2ZSBkZW1vOyB0aGUgYnJvd3NlciBydW5zIHRoZSBleGFjdCBzYW1lIHdlaWdodHMgYXMgUHl0aG9uCgojIyBMaXZlIGRlbW8KaHR0cHM6Ly9jcm9weWllbGQudmVyY2VsLmFwcAo=
+# CropYield — Crop Yield Predictor
+
+A 2nd-year B.Tech AI/ML project by Vikranth Reddy (Woxsen University).
+
+## What it does
+Predicts crop yield in quintals per hectare from season rainfall, average temperature, fertilizer use, soil pH and irrigation.
+
+## Model
+- Ridge regression (alpha = 1.0) on standardised features
+- Trained on 600 synthetic farm seasons (seed 42)
+- 5-fold cross-validation: R² = 0.844, MAE = 2.50 q/ha, RMSE = 3.13 q/ha
+- Baseline (predict the mean): MAE = 6.45 q/ha — the model is ~2.6x better
+
+## Files
+- `train.py` — generates data, trains the model, writes `model.json`
+- `model.json` — learned means, standard deviations, coefficients, intercept
+- `index.html` — interactive demo; the browser runs the exact same weights as Python
+
+## Live demo
+https://cropyield-sigma.vercel.app
